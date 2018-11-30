@@ -1,10 +1,12 @@
 package com.banana.bananaweather.db;
 
+import org.litepal.crud.DataSupport;
+
 /**
  * Created by djd000 on 2018/11/19.
  */
 
-public class City {
+public class City extends DataSupport{
     private int id;
     private String cityName;
     private int cityCode;
