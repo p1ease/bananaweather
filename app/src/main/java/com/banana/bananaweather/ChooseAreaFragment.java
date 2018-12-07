@@ -3,6 +3,7 @@ package com.banana.bananaweather;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -38,7 +39,7 @@ import okhttp3.Response;
  */
 
 public class ChooseAreaFragment extends Fragment {
-    public static final String TAG = "djd + ChooseAreaFragment";
+    public static final String TAG =ChooseAreaFragment.class.getName()+ " + djd " ;
     public static final int LEVEL_PROVINCE = 0;
     public static final int LEVEL_CITY = 1;
     public static final int LEVEL_COUNTY = 2;
@@ -86,6 +87,21 @@ public class ChooseAreaFragment extends Fragment {
                 }else if(currentLevel == LEVEL_CITY){
                     selectCity = cityList.get(i);
                     queryCounty();
+                }else if(currentLevel == LEVEL_COUNTY){
+                    String weatherId = countyList.get(i).getWeatherId();
+                    if(getActivity() instanceof MainActivity) {
+                        Log.i(TAG," weatherId :"+weatherId);
+                        Intent intent = new Intent(getActivity(),WeatherActivity.class);
+                        intent.putExtra("weather_id" ,weatherId);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }else if(getActivity() instanceof WeatherActivity){
+                        WeatherActivity weatherActivity = (WeatherActivity) getActivity();
+                        weatherActivity.drawerLayout.closeDrawers();
+                        weatherActivity.swipeRefreshLayout.setRefreshing(true);
+                        weatherActivity.requestWeather(weatherId);
+                    }
+
                 }
             }
         });
@@ -118,7 +134,7 @@ public class ChooseAreaFragment extends Fragment {
             listView.setSelection(0);
             currentLevel = LEVEL_PROVINCE;
         }else{
-            String address = "https://guolin.tech/api/china";
+            String address = "http://guolin.tech/api/china";
             Log.i(TAG,address);
             queryFromServer(address,"province");
         }

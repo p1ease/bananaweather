@@ -6,6 +6,8 @@ import android.util.Log;
 import com.banana.bananaweather.db.City;
 import com.banana.bananaweather.db.County;
 import com.banana.bananaweather.db.Province;
+import com.banana.bananaweather.gson.Weather;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -82,4 +84,17 @@ public class Utility {
         return false;
     }
 
+    public static Weather handleWeatherResponse(String response){
+        try{
+            Log.i(TAG,"response + "+response);
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+            return new Gson().fromJson(weatherContent,Weather.class);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
